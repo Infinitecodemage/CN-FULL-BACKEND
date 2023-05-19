@@ -6,10 +6,17 @@ const host = 'localhost';
 const port = 8000; // endpoit/door to Ip address.
 
 const requestlistener = function(req, res){
-    res.writeHead(200); // status code 200: "Ok"
-    res.end("My fourth Server: ");// http response.
-};
+    // res.setHeader("content-type", "application/json");
+    // res.writeHead(200);
+    // res.end(`{"message": "My fourth Server: "}`);
 
+    // csv: comma separated view
+
+    res.setHeader("content-type", "text/csv");
+    res.setHeader("content-Disposition", "attachment; filename=oceanpals.csv")
+    res.writeHead(200);
+        res.end(`id, name\n 1, Ritesh Raj Prasad`);
+}
 // create our server via http module's createServer()
 const server= http.createServer(requestlistener);
 // Bind the server to a network address 
