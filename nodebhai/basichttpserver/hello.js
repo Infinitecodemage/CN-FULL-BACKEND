@@ -1,4 +1,5 @@
-console.log("hello to the world.");
+const fs = require('fs').promises;
+const path = require('path');
 const http = require('http');
 // import http from 'http';// loading the http module 
 
@@ -6,21 +7,30 @@ const host = 'localhost';
 const port = 8000; // endpoit/door to Ip address.
 
 const requestlistener = function(req, res){
-    // res.setHeader("content-type", "application/json");
-    // res.writeHead(200);
-    // res.end(`{"message": "My fourth Server: "}`);
+    // -- The path.resolve() method ensures that the resulting file 
+    //    path is normalized and valid across different platforms.
+    const filepath = path.resolve(__dirname, '../main.html')
 
-    // csv: comma separated view
+    fs.readFile(filepath)
+    .then(contents => {
+        res.setHeader("Content-Type", "text/html");
+        res.writeHead(200);
+        res.end(contents);
+    })
+    .catch(err => {
+        res.writeHead(500);
+        res.end(err);
+        return;
+    })
 
-    res.setHeader("content-type", "text/csv");
-    res.setHeader("content-Disposition", "attachment; filename=oceanpals.csv")
-    res.writeHead(200);
-        res.end(`id, name\n 1, Ritesh Raj Prasad`);
 }
 // create our server via http module's createServer()
 const server= http.createServer(requestlistener);
-// Bind the server to a network address 
-// (all are optional arg.)
-server.listen(port, host, () =>{
-    console.log(`server is running on http://${host}:${port}`);
+server.listen(port, host, (err) =>{
+    if(err){
+        console.log('error');
+    }else{
+        console.log(`server is running on http://${host}:${port}`);
+    }
+
 })
