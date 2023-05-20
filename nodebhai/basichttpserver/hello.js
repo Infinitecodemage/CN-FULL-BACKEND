@@ -1,14 +1,13 @@
 const http = require('http');
 const fs = require('fs').promises;
 const path = require('path');
-
-//cannot use import statement out of module.
-// import http from 'http';// loading the http module 
-
 const host = 'localhost';
 const port = 8000; 
 
-//efficient serving html files.
+
+
+
+
 let mainFile;
 const requestlistener = function(req, res){
     res.setHeader("Content-Type", "text/html");
@@ -16,14 +15,14 @@ const requestlistener = function(req, res){
     res.end(mainFile);
 }
 
-
 // create our server via http module's createServer()
 const server= http.createServer(requestlistener);
-const filepath = path.resolve(__dirname, '../main.html');
+const filepath = path.resolve(__dirname, 'main.html');
 
-// Efficient way of serving html file.
+// Efficient way of serving html file. 
+// -- Instead of loading data at every request.
 // -- we shift the file reading logic from the 
-//  requestListener() function to our server startup.
+//    requestListener() function to our server startup.
 fs.readFile(filepath)
     .then(contents => {
         mainFile = contents;
