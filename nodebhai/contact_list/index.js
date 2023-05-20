@@ -1,13 +1,29 @@
-// const express = require('express');
-//  const app = express();
+// What is EJS and how do I learn it?
+// EJS (Embedded JavaScript) is a simple templating language that enables 
+// developers to generate HTML markup with plain JavaScript. 
 
-const app = require('express')();
+const app = require('express')(); 
+const path = require('path');
+
 const port = 8000;
 const host = 'localhost';
 
+// set property-'view engine' value to 'ejs' template engine.
+app.set('view engine', 'ejs');
+// app.set('views', path.join(__dirname, 'views'));        //-- use path.join or path.resolve()
+app.set('views', path.resolve(__dirname, './views'));      // in resolve you must give: "./"
+
 app.get('/', function(req,res){
-    res.send('<h1>cool, It is running! or is it? </h1>');
+    // console.log('this is req: ', req);
+    console.log('__dirname: ',path.resolve(__dirname, './views'));
+    // res.send('<h1>cool, It is running! or is it? </h1>');
+    return res.render('home');
 });
+
+app.get('/practice', function(req, res){
+    return res.render('practice', { title: "practice & play with ejs"});
+});
+
 
 // for route profile
 app.get('/profile', function(req, res){
@@ -20,10 +36,3 @@ app.get('/profile', function(req, res){
     }
     console.log('Yup! my express server is running on port: ', port);
  });
-
-// In the given code, the server.listen() method is called on the server object, 
-// and the arrow function is defined in the same scope as the method call. 
-// Therefore, the "this" context inside the arrow function will refer to the server object.
-// 
-// In summary, the "this" context inside the arrow function () => {} 
-// in the given code will refer to the server object.

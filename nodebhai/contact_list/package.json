@@ -9,6 +9,7 @@
   "author": "Ritesh Raj Prasad",
   "license": "ISC",
   "dependencies": {
+    "ejs": "^3.1.9",
     "express": "^4.18.2"
   }
 }
