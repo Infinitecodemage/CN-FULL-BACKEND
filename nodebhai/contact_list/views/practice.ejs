@@ -9,5 +9,23 @@
 <body>
     <!-- need to make controller for this route -->
     <h1>playground</h1>
+
+    <!-- for loop with Ejs -->
+    <ul>
+        <%for(let i =1; i< 6; i++){%>
+        <li>
+            <%=i%> &nbsp is the iteration count
+        </li>
+        <%}%>
+    </ul>
+
+    <!-- if else with ejs -->
+    <%if (true){%> 
+        <h1>It is true.</h1>    
+    <%}else{%>
+        <h1>It's False.</h1>
+    <%}%> 
+
+
 </body>
 </html>

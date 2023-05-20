@@ -1,34 +1,57 @@
-// What is EJS and how do I learn it?
-// EJS (Embedded JavaScript) is a simple templating language that enables 
-// developers to generate HTML markup with plain JavaScript. 
+const express = require('express');
+const app = express(); 
 
-const app = require('express')(); 
 const path = require('path');
 
 const port = 8000;
 const host = 'localhost';
 
-// set property-'view engine' value to 'ejs' template engine.
-app.set('view engine', 'ejs');
-// app.set('views', path.join(__dirname, 'views'));        //-- use path.join or path.resolve()
-app.set('views', path.resolve(__dirname, './views'));      // in resolve you must give: "./"
 
-app.get('/', function(req,res){
-    // console.log('this is req: ', req);
-    console.log('__dirname: ',path.resolve(__dirname, './views'));
-    // res.send('<h1>cool, It is running! or is it? </h1>');
-    return res.render('home');
+
+app.set('view engine', 'ejs');    
+app.set('views', path.resolve(__dirname, './views'));   
+
+// middleware 1
+//  -- when extended is set to true, the parsed data is represented as an object 
+//     with arrays for each key, allowing multiple values for the same key.
+app.use(express.urlencoded({extended: true}));
+
+let contactList = [
+    {name: "sharielle", phone:1223568},
+    {name: "Dante", phone:1234567890},
+    {name: "Alpheas", phone:98765321}
+]
+
+
+// route handler for the root URL ("/").
+app.get('/', function(req,res){    
+    console.log('__dirname: ',path.resolve(__dirname, './views'));  
+    return res.render('home', {
+        // locals or context
+         title: "Contact List", contact_list:contactList
+        });
 });
 
 app.get('/practice', function(req, res){
     return res.render('practice', { title: "practice & play with ejs"});
 });
 
-
-// for route profile
 app.get('/profile', function(req, res){
-    res.send('<h1> This is profile </h1>');
+    return res.send('<h1> This is profile </h1>');
 })
+
+app.post('/create-contact', function(req,res){
+    // return res.redirect('/practice');
+    console.log(req.body);
+    // console.log(req.body.name);
+    // console.log(req.phone);
+
+    // --pushing an object in contactList array.
+    contactList.push(req.body);
+    return res.redirect('/');
+})
+
+
 
  app.listen(port, host, (err) =>{   
     if(err){
