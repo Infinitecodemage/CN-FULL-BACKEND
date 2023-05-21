@@ -1,11 +1,11 @@
+
 const express = require('express');
 const app = express(); 
-
-const path = require('path');
 
 const port = 8000;
 const host = 'localhost';
 
+const path = require('path');
 
 
 app.set('view engine', 'ejs');    
@@ -16,13 +16,8 @@ app.use(express.static('assets'));              //-> middleware
 
 // middleware 2:
 app.use(function(req, res, next){
-    console.log('middleware 2 called.');
+    // console.log('middleware 2 called.');
     next(); 
-});
-// middleware 3:
-app.use(function(req, res, next){    
-    console.log('From middleware 3');
-    next()
 });
 
 
@@ -35,8 +30,7 @@ let contactList = [
 
 // controller- route handler for the root URL ("/").
 app.get('/', function(req,res){    
-    console.log('__dirname: ',path.resolve(__dirname, './views'));  
-    return res.render('home', {
+        return res.render('home', {
         // locals or context
          title: "Contact List", contact_list:contactList
         });
@@ -48,10 +42,46 @@ app.get('/practice', function(req, res){
 
 app.get('/profile', function(req, res){
     return res.send('<h1> This is profile </h1>');
-})
+});
+
+
+// 
+app.get('/delete-contact/', function(req, res){
+    console.log(req.query);
+    let phone = req.query.phone;
+    console.log(phone);
+    // -- method 1 : findIndex() with splice()
+            // let contactIndex = contactList.findIndex(
+            //     contact => contact.phone == phone
+            //     );
+            //     console.log(contactIndex)
+            //     if(contactIndex !== -1){
+            //         // contactList = contactList.splice(contactIndex, 1);
+            //         contactList.splice(contactIndex, 1);
+            //     }
+
+    // -- method 2: filter   
+            // contactList  = contactList.filter(currentObj => 
+                        //    Note: use == rather than ===
+            //     currentObj.phone != phone
+            // );
+    // method 3: reduce
+        contactList = contactList.reduce((accumulator, currObj)=>{
+            if(currObj.phone != phone){
+                accumulator.push(currObj);
+            }
+            return accumulator;
+        },[]);
+
+    
+
+
+    return res.redirect('back');
+});
+
 
 app.post('/create-contact', function(req,res){
-    console.log(req.body);   
+    // console.log(req.body);   
     contactList.push(req.body);
     return res.redirect('back');
 })

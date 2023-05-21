@@ -11,13 +11,25 @@
     <h1>hey, this is view/home.ejs</h1>
     <h1 style="color: whitesmoke;">rendered from Ejs Views!</h1>
     <div id="list-contact">
-        <ul>
-            <%for(let i of contact_list){%> 
-                <li>
-                    <div><%= i.name%></div>
-                    <div><%= i.phone%></div>
-                </li>
+        <ul>         
+
+            <%for(let i of contact_list){%>
+                <div class="li-del-merge">
+
+                    <div id= "row-contact">
+                        <li>
+                            <div><%= i.name%></div>
+                            <div><%= i.phone%></div>
+                        </li>
+                    </div>
+                    <div id="delete-contact">
+                        <a href="/delete-contact/?phone=<%=i.phone%>&name=<%=i.name%>">
+                            del-contact
+                        </a>
+                    </div>
+                </div> 
             <%}%>            
+            
         </ul>
     </div>
 
