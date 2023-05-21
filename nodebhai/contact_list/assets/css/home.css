@@ -1,0 +1,22 @@
+body{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+    background:linear-gradient(120deg, orangered, orange) no-repeat;
+    color: azure;
+}
+#list-contact{
+    text-transform: capitalize;
+}
+#list-contact ul{
+    
+    
+}
+#list-contact ul li{
+    display: flex;
+    justify-content: space-around;
+    text-decoration: none;
+    list-style-type: none;
+}
+#list-contact ul li div{
+    margin: 1rem .5rem;
+}

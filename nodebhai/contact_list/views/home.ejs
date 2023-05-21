@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
     <title><%= title %></title>
 </head>
 <body>
     <h1>hey, this is view/home.ejs</h1>
-    <h1 style="background-color: orangered;">rendered from Ejs Views!</h1>
-    <div>
+    <h1 style="color: whitesmoke;">rendered from Ejs Views!</h1>
+    <div id="list-contact">
         <ul>
             <%for(let i of contact_list){%> 
                 <li>
-                    <p><%= i.name%></p>
-                    <p><%= i.phone%></p>
+                    <div><%= i.name%></div>
+                    <div><%= i.phone%></div>
                 </li>
             <%}%>            
         </ul>
@@ -25,6 +26,6 @@
         <input type="text" name="phone" id="phone">
         <button type="submit">Add Contact</button>
     </form>
-
+    <script type="text/javascript" src="/js/home.js"> </script>
 </body>
 </html>

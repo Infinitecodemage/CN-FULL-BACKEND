@@ -10,28 +10,20 @@ const host = 'localhost';
 
 app.set('view engine', 'ejs');    
 app.set('views', path.resolve(__dirname, './views'));   
-
-// middleware 1
-//  -- when extended is set to true, the parsed data is represented as an object 
-//     with arrays for each key, allowing multiple values for the same key.
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));  //-> middleware
+// assets folder for static files.
+app.use(express.static('assets'));              //-> middleware
 
 // middleware 2:
 app.use(function(req, res, next){
     console.log('middleware 2 called.');
-    req.myName_mw2 = 'Shirone-mw2';
-    //--> if not specified the web page won't goto the next middleware.
-    // console.log('req.myName_mw3 cannot be accessed', req.myName);
     next(); 
 });
-
+// middleware 3:
 app.use(function(req, res, next){    
     console.log('From middleware 3');
-    console.log('from mw3, calling req.myName declared in mw2', req.myName);
-    // req.myName_mw3 = 'Shirone-mw3';
     next()
 });
-
 
 
 let contactList = [
@@ -58,13 +50,11 @@ app.get('/profile', function(req, res){
     return res.send('<h1> This is profile </h1>');
 })
 
-// controller for post.
 app.post('/create-contact', function(req,res){
     console.log(req.body);   
     contactList.push(req.body);
     return res.redirect('back');
 })
-
 
 
  app.listen(port, host, (err) =>{   
