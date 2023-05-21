@@ -16,6 +16,24 @@ app.set('views', path.resolve(__dirname, './views'));
 //     with arrays for each key, allowing multiple values for the same key.
 app.use(express.urlencoded({extended: true}));
 
+// middleware 2:
+app.use(function(req, res, next){
+    console.log('middleware 2 called.');
+    req.myName_mw2 = 'Shirone-mw2';
+    //--> if not specified the web page won't goto the next middleware.
+    // console.log('req.myName_mw3 cannot be accessed', req.myName);
+    next(); 
+});
+
+app.use(function(req, res, next){    
+    console.log('From middleware 3');
+    console.log('from mw3, calling req.myName declared in mw2', req.myName);
+    // req.myName_mw3 = 'Shirone-mw3';
+    next()
+});
+
+
+
 let contactList = [
     {name: "sharielle", phone:1223568},
     {name: "Dante", phone:1234567890},
@@ -23,7 +41,7 @@ let contactList = [
 ]
 
 
-// route handler for the root URL ("/").
+// controller- route handler for the root URL ("/").
 app.get('/', function(req,res){    
     console.log('__dirname: ',path.resolve(__dirname, './views'));  
     return res.render('home', {
@@ -40,15 +58,11 @@ app.get('/profile', function(req, res){
     return res.send('<h1> This is profile </h1>');
 })
 
+// controller for post.
 app.post('/create-contact', function(req,res){
-    // return res.redirect('/practice');
-    console.log(req.body);
-    // console.log(req.body.name);
-    // console.log(req.phone);
-
-    // --pushing an object in contactList array.
+    console.log(req.body);   
     contactList.push(req.body);
-    return res.redirect('/');
+    return res.redirect('back');
 })
 
 
