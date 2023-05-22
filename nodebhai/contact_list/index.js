@@ -1,22 +1,30 @@
 
 const express = require('express');
-const app = express(); 
 
 const port = 8000;
 const host = 'localhost';
-
 const path = require('path');
+
+// import mongoose config.
+// --> Allows for establishing a connection tothe mongoDB db.
+// --> & Performing various db operations.
+const db = require('./config/mongoose');
+// importing Contact model.
+const Contact = require('./models/contact');
+// const PlayfulMong = require('./models/playfulMongoose');
+
+const app = express(); 
 
 
 app.set('view engine', 'ejs');    
 app.set('views', path.resolve(__dirname, './views'));   
 app.use(express.urlencoded({extended: true}));  //-> middleware
-// assets folder for static files.
 app.use(express.static('assets'));              //-> middleware
 
 // middleware 2:
-app.use(function(req, res, next){
-    // console.log('middleware 2 called.');
+app.use(function(req, res, next){    
+    console.log(`req method: ${req.method} |/(:)\| req.url: ${req.url}`)
+    // console.log(req.body, " :req.body");
     next(); 
 });
 
@@ -35,54 +43,47 @@ app.get('/', function(req,res){
          title: "Contact List", contact_list:contactList
         });
 });
-
+// --Route handler
 app.get('/practice', function(req, res){
     return res.render('practice', { title: "practice & play with ejs"});
 });
-
+// -- Route handler
 app.get('/profile', function(req, res){
     return res.send('<h1> This is profile </h1>');
 });
 
-
-// 
+// delete contact
 app.get('/delete-contact/', function(req, res){
     console.log(req.query);
     let phone = req.query.phone;
     console.log(phone);
-    // -- method 1 : findIndex() with splice()
-            // let contactIndex = contactList.findIndex(
-            //     contact => contact.phone == phone
-            //     );
-            //     console.log(contactIndex)
-            //     if(contactIndex !== -1){
-            //         // contactList = contactList.splice(contactIndex, 1);
-            //         contactList.splice(contactIndex, 1);
-            //     }
 
+    // -- method 1 : findIndex() with splice()  
     // -- method 2: filter   
-            // contactList  = contactList.filter(currentObj => 
-                        //    Note: use == rather than ===
-            //     currentObj.phone != phone
-            // );
-    // method 3: reduce
+    // -- method 3: reduce
         contactList = contactList.reduce((accumulator, currObj)=>{
             if(currObj.phone != phone){
                 accumulator.push(currObj);
             }
-            return accumulator;
-        },[]);
+            return accumulator;                             
 
-    
-
-
+        },[]);                  
+        
     return res.redirect('back');
 });
 
 
 app.post('/create-contact', function(req,res){
-    // console.log(req.body);   
-    contactList.push(req.body);
+    // console.log(req.body);   // note: req.body is an object.
+    // contactList.push(req.body);
+    Contact.create(req.body)
+        .then((newContact)=>{
+            console.log("model:*** (:--", newContact);
+        })
+        .catch((err) =>{
+            console.log('Error in creating new document (new contact in collection)--')
+        });                    
+
     return res.redirect('back');
 })
 
