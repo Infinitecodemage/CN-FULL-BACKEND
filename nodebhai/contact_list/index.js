@@ -68,9 +68,13 @@ let contactList = [
 // async - try catch
     app.get('/', async function(req,res){   
         try{
-            let contact_mongoose_try = await Contact.find({}); //--> No need to exec().
-            return res.render('home', {title: 'Contact Lista', contact_list: contact_mongoose_try})
-        } catch(err){
+            let contact_mngoseModel_collection = await Contact.find({}); //--> No need to exec()
+            return res.render('home', 
+                                {title: 'Contact Lista', 
+                                contact_list: contact_mngoseModel_collection
+                    });
+        } 
+        catch(err){
             console.log("Error in getting contact from Contact model & contact_list_db.");
             res.status(500).send('Error in Retrieving contacts');
         }      
@@ -89,24 +93,58 @@ app.get('/profile', function(req, res){
 });
 
 // delete contact
-app.get('/delete-contact/', function(req, res){
-    console.log(req.query);
-    let phone = req.query.phone;
-    console.log(phone);
+    // app.get('/delete-contact/', function(req, res){
+    //     // console.log(req.query);
+    //     let phone = req.query.phone;
+    //     console.log(phone , "to delete");
 
-    // -- method 1 : findIndex() with splice()  
-    // -- method 2: filter   
-    // -- method 3: reduce
-        contactList = contactList.reduce((accumulator, currObj)=>{
-            if(currObj.phone != phone){
-                accumulator.push(currObj);
-            }
-            return accumulator;                             
+    //     // -- method 1 : findIndex() with splice()  
+    //     // -- method 2: filter   
+    //     // -- method 3: reduce
+    //         contactList = contactList.reduce((accumulator, currObj)=>{
+    //             if(currObj.phone != phone){
+    //                 accumulator.push(currObj);
+    //             }
+    //             return accumulator;                             
 
-        },[]);                  
-        
-    return res.redirect('back');
-});
+    //         },[]);                  
+            
+    //     return res.redirect('back');
+    // });
+
+
+
+app.get('/delete-contact/', async function(req, res){
+        // console.log(req.query);
+        let phone = req.query.phone;
+        console.log("To delete : ", phone);
+        // Contact
+        Contact.deleteMany({phone: phone}).exec()
+        .then(function(){
+            console.log("Data deleted");
+            return res.redirect('back');
+        })
+        .catch((err)=> {
+            console.log('Error : ', err);
+        })
+    });
+
+
+// app.get('/delete-contact/', async function(req, res) {
+//     try {
+//       let phone = req.query.phone;
+//       console.log("To delete:", phone);
+  
+//       await Contact.deleteMany({ phone: phone }).exec();
+//       console.log("Data deleted");
+  
+//       return res.redirect('back');
+//     } catch (err) {
+//       console.log('Error:', err);
+//       return res.status(500).send('Internal Server Error');
+//     }
+//   });
+
 
 
 app.post('/create-contact', function(req,res){    
