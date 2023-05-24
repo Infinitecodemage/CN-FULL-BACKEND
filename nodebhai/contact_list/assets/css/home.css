@@ -5,6 +5,7 @@ body{
     text-align: center;
     background:linear-gradient(120deg, orangered, orange) no-repeat;
     color: azure;    
+    margin-bottom: 4rem;
 }
 
 #list-contact{

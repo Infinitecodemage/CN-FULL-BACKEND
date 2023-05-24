@@ -9,12 +9,13 @@ const path = require('path');
 // --> Allows for establishing a connection tothe mongoDB db.
 // --> & Performing various db operations.
 const db = require('./config/mongoose');
-// importing Contact model.
+// importing the Contact model. 
+// -- we usually create a model in the folder with same, lowercase.
 const Contact = require('./models/contact');
+const { title } = require('process');
 // const PlayfulMong = require('./models/playfulMongoose');
 
 const app = express(); 
-
 
 app.set('view engine', 'ejs');    
 app.set('views', path.resolve(__dirname, './views'));   
@@ -36,13 +37,48 @@ let contactList = [
 ]
 
 
-// controller- route handler for the root URL ("/").
-app.get('/', function(req,res){    
-        return res.render('home', {
-        // locals or context
-         title: "Contact List", contact_list:contactList
-        });
-});
+// controller USING promise-then()-catch().
+    // app.get('/', function(req,res){    
+    //         Contact.find({})
+    //             .then((contact_mongoose) =>{
+    //                 res.render('home', {
+    //                     title:'Contacts List', 
+    //                     contact_list: contact_mongoose
+    //                 })
+    //             })
+    //             .catch((err) =>{
+    //                 console.log("Error in getting contact from Contact model & contact_list_db.")
+    //             })
+    // });
+
+// controller: chain methods -- async await
+    // app.get('/', async function(req,res){    
+    //     await Contact.find({}).exec()
+    //         .then((contact_mongoose) =>{
+    //             return res.render('home', {
+    //                 title:'Contacts List', 
+    //                 contact_list: contact_mongoose
+    //             })
+    //         })
+    //         .catch((err) =>{
+    //             console.log("Error in getting contact from Contact model & contact_list_db.")
+    //         })   
+    // });
+
+// async - try catch
+    app.get('/', async function(req,res){   
+        try{
+            let contact_mongoose_try = await Contact.find({}); //--> No need to exec().
+            return res.render('home', {title: 'Contact Lista', contact_list: contact_mongoose_try})
+        } catch(err){
+            console.log("Error in getting contact from Contact model & contact_list_db.");
+            res.status(500).send('Error in Retrieving contacts');
+        }      
+             
+    });
+
+
+
 // --Route handler
 app.get('/practice', function(req, res){
     return res.render('practice', { title: "practice & play with ejs"});
@@ -73,19 +109,17 @@ app.get('/delete-contact/', function(req, res){
 });
 
 
-app.post('/create-contact', function(req,res){
-    // console.log(req.body);   // note: req.body is an object.
-    // contactList.push(req.body);
+app.post('/create-contact', function(req,res){    
     Contact.create(req.body)
         .then((newContact)=>{
             console.log("model:*** (:--", newContact);
         })
         .catch((err) =>{
             console.log('Error in creating new document (new contact in collection)--')
-        });                    
+        })                 
 
     return res.redirect('back');
-})
+});
 
 
  app.listen(port, host, (err) =>{   
