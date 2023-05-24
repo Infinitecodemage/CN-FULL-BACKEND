@@ -113,54 +113,136 @@ app.get('/profile', function(req, res){
     // });
 
 
+// 1- delete contact using phone value.
+    // app.get('/delete-contact/', async function(req, res){
+    //         // console.log(req.query);
+    //         let phone = req.query.phone;
+    //         console.log("To delete : ", phone);
+    //         // Contact
+    //         Contact.deleteMany({phone: phone}).exec()
+    //         .then(function(){
+    //             console.log("Data deleted");
+    //             return res.redirect('back');
+    //         })
+    //         .catch((err)=> {
+    //             console.log('Error : ', err);
+    //         })
+    //     });
 
-app.get('/delete-contact/', async function(req, res){
-        // console.log(req.query);
-        let phone = req.query.phone;
-        console.log("To delete : ", phone);
-        // Contact
-        Contact.deleteMany({phone: phone}).exec()
-        .then(function(){
-            console.log("Data deleted");
+
+// 2-deleting contact using default _id = id created by mongodb
+    // app.get('/delete-contact/', async function(req, res) {
+    //     try {
+    //       let contact_id = req.query.id;
+    //       console.log("To delete:", contact_id);
+    //       await Contact.deleteMany({ _id: contact_id }).exec();
+    //       console.log("Data deleted");  
+    //       return res.redirect('back');
+    //     }
+    //       catch (err) {
+    //       console.log('Error:', err);
+    //       return res.status(500).send('Internal Server Error');
+    //     }
+    //   });
+
+// 3- find by id and delete
+      app.get('/delete-contact', async function(req, res){
+        try{
+            let id = req.query.id;
+            await Contact.findByIdAndDelete(id);
             return res.redirect('back');
-        })
-        .catch((err)=> {
-            console.log('Error : ', err);
-        })
-    });
+        }
+        catch(err){
+            console.log('error in deleting object fro databases: ', err);
+        }
+      })
 
 
-// app.get('/delete-contact/', async function(req, res) {
-//     try {
-//       let phone = req.query.phone;
-//       console.log("To delete:", phone);
-  
-//       await Contact.deleteMany({ phone: phone }).exec();
-//       console.log("Data deleted");
-  
-//       return res.redirect('back');
-//     } catch (err) {
-//       console.log('Error:', err);
-//       return res.status(500).send('Internal Server Error');
+// /create-contact: with .then alongwith /async
+    // app.post('/create-contact', async function(req,res){    
+    //     await Contact.create(req.body)
+    //         .then((newContact)=>{
+    //             console.log("model:*** (:--", newContact);
+    //         })
+    //         .catch((err) =>{
+    //             console.log('Error in creating new document (new contact in collection)--')
+    //         })                 
+
+    //     return res.redirect('back');
+    // });
+
+// async await.
+// Error: req method: POST |/(:)| req.url: /create-contact
+// error:  TypeError: Contact.create(...).exec is not a function
+    // app.post('/create-contact/', async (req, res)=>{
+    //     try{
+    //         const newContact = await Contact.create(req.body).exec();
+    //         console.log('newContact : ', newContact);
+    //         return res.redirect('back');
+    //     }catch(err){
+    //         console.log('error: ',err);
+    //     }
+    // }) 
+
+// correct async/await with exec();
+// app.post('/create-contact/', async (req, res)=>{
+//     try{
+//         const newContact = await Contact.create(req.body);
+//         console.log('newContact : ', newContact);
+//         return res.redirect('back');
+//     }catch(err){
+//         console.log('error: ',err);
 //     }
-//   });
+// }) 
 
 
-
-app.post('/create-contact', function(req,res){    
-    Contact.create(req.body)
-        .then((newContact)=>{
-            console.log("model:*** (:--", newContact);
-        })
-        .catch((err) =>{
-            console.log('Error in creating new document (new contact in collection)--')
-        })                 
-
-    return res.redirect('back');
+// save() method is called on the new instance to persist it to the database.
+app.post('/create-contact', async (req, res) => {
+    try {
+        const newContact = new Contact(req.body);
+        await newContact.save();  // ---> we could have use - const newContact = await Contact.create(req.body);
+        console.log('newContact:', newContact);
+        return res.redirect('back');
+    } catch (err) {
+        console.log('error:', err);
+    }
 });
 
 
- app.listen(port, host, (err) =>{   
+
+// In above code.
+// The try-catch block surrounding "Contact.create()" is not necessary,
+// as any errors within the asynchronous operation will be caught by the catch() block instead.
+
+// --modified code.
+// app.post('/create-contact/', async function(req, res){
+//     try{
+//         const newContact = await Contact.create(req.body);
+//         console.log('newContact: ', newContact);
+//         return res.redirect('back');
+//     } 
+//     catch(error){
+//         console.log('error: ', error);
+//     }
+// })
+
+// Error : The try-catch block surrounding Contact.create() 
+        // app.post('/create-contact/', (req, res)=>{            
+        //         Contact.create(req.body).exec((err, newContact) => {
+        //             if(err){
+        //                 console.log(err, 'Error in crating new contact');
+        //             }else{
+        //                 console.log('newContact: ', newContact);
+        //                 return res.redirect('back');
+        //             }
+        //         })            
+        // })
+
+
+
+
+
+app.listen(port, host, (err) =>{   
     if(err){
         console.log(`Error in running the server`, err);
     }
