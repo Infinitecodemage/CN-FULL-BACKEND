@@ -6,5 +6,7 @@
 
 
 module.exports.home = function(req, res){
-    return res.end('<h1>Express is up for codeial! </h1>')
+    // return res.end('<h1>Express is up for codeial! </h1>');
+    //--> render home.ejs
+    return res.render('home', {title: 'HomePage', bodyTitle: 'HomePageBody'})
 }
