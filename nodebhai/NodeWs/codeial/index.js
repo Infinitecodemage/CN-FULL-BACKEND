@@ -1,7 +1,11 @@
 const express = require('express');
+// const mongoose= require('mongoose');
 const expressLayouts = require('express-ejs-layouts'); //-- express framework, allows for easy layout rendering in EJS.
 const app = express();
+
 const port = 8000;
+const db = require ('./config/mongoose.js');
+
                                   // register all the routes defined. it returns router objects.
 app.use('/', require('./routes'));// middleware func in express.js // used to mount a middleware function or                                   
                                   // or mount a router on the specified path, in this case, the root path ('/').

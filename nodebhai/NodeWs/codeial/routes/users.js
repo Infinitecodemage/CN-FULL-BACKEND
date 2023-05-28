@@ -1,14 +1,10 @@
 const express = require('express');
-// create the router object.
-const router = express.Router();
-console.log('userjs');
-
-
+const router = express.Router(); // create the router object.console.log('*** userjs ***');
 const userController = require('../controllers/users_controller');
 
-// set controller(route handler) for path '/profile' get req.
+router.get('/profile', userController.profile); // set controller(route handler) for path '/profile' get req.
 
-router.get('/profile', userController.profile);
+router.get('/sign-up', userController.signIn);   // --> route: /users-sign-up
+router.get('/sign-in', userController.signUp);   // --> route: /users/sign-in
 
 module.exports = router;
-
