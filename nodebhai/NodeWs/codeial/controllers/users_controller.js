@@ -99,3 +99,12 @@ module.exports.createSession = function(req, res){
         return res.redirect('back');
     })
 }
+
+
+// logout: try      clear.cookies()
+module.exports.logout = function(req, res){
+    //clear the user_id cookie:
+    console.log('logout @@@ - ', req.cookies.user_id);
+    res.clearCookie('user_id');
+    return res.redirect('/users/sign-in');
+}
