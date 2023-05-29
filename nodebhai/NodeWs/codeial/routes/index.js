@@ -22,8 +22,7 @@ router.get('/', homeController.home);
 // Mount the router for the '/profile' path
 router.use('/users', require('./users'));
 
-
-console.log('Router Loaded: - ');
+console.log('Router Loaded: - from route/index.js');
 
 //-- exports the router object from the module.
 module.exports = router;

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-
-const userSchema=  new mongoose.Schema({
+const userSchema=  new mongoose.Schema({ // --> Creating user Schema.
     email: {
         type: String,
         required: true,
@@ -8,7 +7,7 @@ const userSchema=  new mongoose.Schema({
     },
     password:{
         type: String,
-        required: unique
+        required: true
     },
     name:{
         type: String,
@@ -18,9 +17,10 @@ const userSchema=  new mongoose.Schema({
     timestamp: true
 })
 
+const User = mongoose.model('User', userSchema);  // Create a User model from the schema.
+module.exports = User;                            // Export the User model.
+
+
 // model name      : User;  
 // collection name : users;   
 // db name         : contact_list_db
-
-const User = mongoose.model('User', userSchema);  // Create a User model from the schema.
-module.exports = User;                            // Export the User model.
