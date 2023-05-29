@@ -4,9 +4,10 @@ const expressLayouts = require('express-ejs-layouts'); //-- express framework, a
 const port = 8000;
 
 const db = require ('./config/mongoose.js');
-
+const cookieParser = require('cookie-parser');
 // app.use(express.urlencoded); // --> Error: body-parser deprecated undefined extended: provide extended option node_modules/express/lib/router/layer.js:95:5
 
+app.use(cookieParser());
 app.use(express.urlencoded({extended: true})); //--> parse URL-encoded request bodies.
 app.use('/', require('./routes')); // middleware func in express.js // used to mount a middleware function or                                   
 app.use(expressLayouts);  // -->middleware, layout rendering in EJS (Embedded js) templates, for common layout for your application's views
