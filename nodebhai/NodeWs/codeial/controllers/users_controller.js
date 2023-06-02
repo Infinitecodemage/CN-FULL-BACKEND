@@ -1,7 +1,7 @@
 const User = require('../models/user'); //--> User variable for importing 'User' model from model/user.js.
 
 module.exports.profile=function(req, res){
-    console.log('----- controllerusers: user----: ', req.user);
+    console.log('----- controller .profile: req.user----: ', req.user);
     //  return res.end('<h1>This is my profile page </h1>');    
     return res.render('user_profile', {title: 'user-profile'});
 }
