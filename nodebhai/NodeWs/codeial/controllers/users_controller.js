@@ -1,20 +1,26 @@
 const User = require('../models/user'); //--> User variable for importing 'User' model from model/user.js.
 
 module.exports.profile=function(req, res){
-    console.log('controllerusers: user: ', req.user);
+    console.log('----- controllerusers: user----: ', req.user);
     //  return res.end('<h1>This is my profile page </h1>');    
     return res.render('user_profile', {title: 'user-profile'});
 }
 
 // render the sign up page:                    // don't think about response url
-module.exports.signUp = function(req, res){            // what action controller would take.
-    return res.render('user_sign_up.ejs', {    // response will perfom action of rendering a page.
-        title: "Codeial | sign Up"
+module.exports.signUp = function(req, res){            // what action controller would take. response will perfom action of rendering a page.
+    if(req.isAuthenticated()){
+        return res.redirect('/users/profile');
+    }
+    return res.render('user_sign_up.ejs', {    
+        title: "Codeial | sign Up ---"
     })                  
 }
 
 // render the sign up page:
 module.exports.signIn = function(req, res){
+    if(req.isAuthenticated()){
+        return res.redirect('/users/profile');
+    }
     return res.render('user_sign_in', {  
         title: "Codeial | Sign In ---"
     });
@@ -126,7 +132,7 @@ module.exports.create = async function(req, res){
             return res.redirect('/users/sign-in');
 
     }catch(err){
-        console.log('Error: in finding user : ', err);
+        console.log('Error: In finding user : ', err);
         return res.redirect('back');
     }
 };
@@ -137,3 +143,10 @@ module.exports.createSession = function(req, res){
         console.log('CreateSession controllers called. goto homepage / .');      
         return res.redirect('/');
 }
+
+module.exports.destroySession = function(req, res, next){
+    req.logout((err) => {
+        if(err) return next(err);
+    });
+    return res.redirect('/');
+  }

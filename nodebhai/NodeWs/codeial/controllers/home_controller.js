@@ -5,8 +5,14 @@
 // when a req is made the router function is executed. 
 
 
+// module.exports.home = function(req, res){
+//     // return res.end('<h1>Express is up for codeial! </h1>');    
+//     return res.render('home', {title:'HomePage', bodyTitle:'HomePageBody'}); //--> render home.ejs
+// }
+
 module.exports.home = function(req, res){
     // return res.end('<h1>Express is up for codeial! </h1>');    
     return res.render('home', {title:'HomePage', bodyTitle:'HomePageBody'}); //--> render home.ejs
 }
+
 

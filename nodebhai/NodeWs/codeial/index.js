@@ -9,6 +9,7 @@ const expressLayouts    = require('express-ejs-layouts'); //-- express framework
 const session           = require('express-session');
 const passport          = require('passport');
 const passportLocal     = require('./config/passport-local-strategy.js');
+// const mongoStore        = require('connect-mongo')(session);
 
 app.use(cookieParser());
 
