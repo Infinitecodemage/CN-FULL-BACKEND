@@ -1,57 +1,128 @@
 const passport = require('passport');
-
 const LocalStrategy = require('passport-local').Strategy;
-
 const User = require('../models/user');
 
-//authentication using passport
+//Authentication using passport
 passport.use(new LocalStrategy(
-            {usernameField: 'email'},
-            function(email, password, done){  //--> verification callback func for the local auth strategy.                
-                User.findOne({email: email}, function(err, user){   // --> find a user and establish the identity.
-                    if(err){
-                        console.log('Error in finding user --> passport');
-                        return done(err);
-                    }
-                    if(!user || user.password != password){
-                        console.log("Invalid username/password");
-                        return done(null, false);
-                    }
-                    return done(null, user); //--> you need to require the 'passport-local' module and access the Strategy object it provides.
-                                            //--> Using .Strategy is simply a convention specific to Passport and its strategy modules.
-                                            // --> It signifies that you are creating a new instance of the strategy object. 
-                                            // --> Other Passport strategy modules may have different naming conventions, 
-                                            // --> but they typically provide an object or constructor that you use to create a strategy instance.
-                });
-            }//-- End of verification callaback.
-));
+    { usernameField: 'email',},
+    async function(email, password, done){
+        //find a user and establish the identity.
+        try{
+            const user = await User.findOne({email : email});
 
-// done = It is a callback function indicate the result of the authentication process.
+                console.log('new Local strategy, User.findOne user', user);
+                console.log('user-password: ', user.password, '-- and -- password: ', password);
+                // if(err){ return done(err); }
 
-// serialization: passport.js need a way to store info about the user in the session.
-// serializing involves converting an object into a format that can be easily stored, transmitted, or persisted, 
-// uch as a string or binary representation. 
+                if(!user || user.password != password){ return done(err, false); }
 
-
-passport.serializeUser(function(user, done){
-done(null, user.id);                        //--> passport.serializer func is used to define how a user object
-})                                          //--> should be serialized into the session. 
-                                            //--> The provided callback func specifies how the user's ID should be extracted
-                                            //--> and stored as the serialized representation of the user. 
-
-//-->  deserializing: It is the process of reconstructing an object from its serialized form.
-//     It takes this serialized data and converts it back into an object that can be used in memory.
-
-//deserialzing the user from the key in the cookies:
-passport.deserializeUser(function(id, done){         // deserializerUser() is used for session management and user authentication purpose.
-    User.findById(id, function(err, user){           // allow the app to retrieve and use the user obj from the session data for subsequent request handling.
-        if(err){
-            console.log('Error in finding user --> Passport');
+                return done(null, user);  //--> user is whole              
+            
+        }catch(err){
+            console.log("new LocalStrategy: callback func failed.");
             return done(err);
         }
-        return done(null, user);
-    })    
-})          
+       
+    }    
+))
 
+// Serializing the user to decide which key is to be kept in the cookies.
+// Function does not involve any asynchronous operations, It is a synchronous operation, there is no need to convert it into an asynchronous function.
+passport.serializeUser(function(user, done){
+    console.log('serialize user.id: ', user.id);
+    done(null, user.id);
+});
+
+passport.deserializeUser(async function(id, done) {
+    try {
+      const user = await User.findById(id).exec();
+      done(null, user);
+    } catch (err) {
+      done(err, null);
+    }
+  });
+// passport.deserializeUser(function(id, done){
+//     User.findById(id, function(err, user){
+//             console.log('findById executed.-- deserializeUser')
+//             done(err, user);
+//         })
+// })
+        
+
+
+// deserializeUser
+// passport.deserializeUser(async function(id, done){
+//     try{
+//         console.log('findById executed.-- deserializeUser');
+
+//         let user;                //--> don't need to do, if error occur findById() It will create 
+//         try {
+//             user = await User.findById(id);
+//             done(null, user);
+//         }
+//         catch(err){
+//             done(err, null);
+//         }
+//     }catch(err){
+//         done(err, null);
+//     }
+// });
+
+  
+
+
+// passport.checkAuthentication = function(req, res, next){       // --> Check if the user is authenticated.
+//     if(req.isAuthenticated()){                                 //--> If the user is signed in, then pass on the req to the next func(Controller's action)
+//         return next();
+//     }
+//     return res.redirect('/users/sign-in');
+// }
+
+
+
+// passport.checkAuthentication = async function(req, res, next){       // --> Check if the user is authenticated.
+//     try{
+//         if(req.isAuthenticated()){                                 // --> If the user is signed in, then pass on the req to the next func(Controller's action)
+//         return next();
+//         }
+//         return res.redirect('/users/sign-in');           // --> No Error in executing function.
+//     }
+//     catch{
+//         console.log('error in executing passport.checkAuth..')
+//         return res.redirect('/users/sign-in');
+//     }
+
+// }
+
+passport.checkAuthentication = function(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    return res.redirect('/users/sign-in');
+}
+
+
+passport.setAuthenticatedUser = function(req, res, next){
+    if(req.isAuthenticated()){
+        console.log('from setAuthenticatedUser --res.locals.user: ', res.locals.user, ' req.user: ', req.user)
+        res.locals.user = req.user;
+    }
+    next()
+}
+
+// passport.setAuthenticatedUser = async function(req,res, next){
+//     try{
+//         if(req.isAuthenticated()){          //--> req.user contains the current signed in user from the session cookie and we are just sending this to the locals file views
+//                             console.log(req.user, "(: req.user setAuthUser");
+//             res.locals.user = req.user;
+//                             console.log(req.locals, '---- (: res.locals in setAuthenticatedUser.');
+//         }
+//         next();    }
+    
+//     catch{
+//         console.log('problem in executing setAuthenticatedUser');
+//         return res.redirect('/users/sign-in');
+//     }
+// }
 
 module.exports = passport;

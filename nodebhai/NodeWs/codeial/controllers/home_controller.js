@@ -7,8 +7,6 @@
 
 module.exports.home = function(req, res){
     // return res.end('<h1>Express is up for codeial! </h1>');    
-    console.log('req.cookies: ', req.cookies);
-    res.cookie('user_id: ', 25);  // --> this is how you can use cookie lib to store data in cookies.
     return res.render('home', {title:'HomePage', bodyTitle:'HomePageBody'}); //--> render home.ejs
 }
 

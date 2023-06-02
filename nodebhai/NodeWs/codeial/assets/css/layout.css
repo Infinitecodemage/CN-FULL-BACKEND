@@ -1,6 +1,20 @@
+
+header{
+    font-size: 1rem;
+    background-color: goldenrod;
+    color: whitesmoke;
+    padding: 1rem;
+}
+
 body{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: orangered;
+    background-color: blueviolet;
+    color: aqua;
+}
+
+footer{
+    font-size: 1rem;
+    font-family:Arial, Helvetica, sans-serif;
+    background-color: goldenrod;
+    color: whitesmoke;
+    padding: 1rem;
 }

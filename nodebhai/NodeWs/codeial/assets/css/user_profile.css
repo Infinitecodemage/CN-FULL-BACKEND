@@ -1,7 +1,6 @@
 body{
-    display: block;
-    margin:5rem 5rem;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: orange;
+
+    font-size: 12px;
+    background-color: rgb(23, 73, 109);
+    color: whitesmoke;
 }

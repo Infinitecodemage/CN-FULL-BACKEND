@@ -2,16 +2,24 @@
     <head>
         <title>
             <%= title %>
-        </title>
-        <!-- <link rel="stylesheet" href="../assets/css/user_profile.css">-->  <!-- Doesn't work -->
-        <link rel="stylesheet" href="/css/user_profile.css">
+        </title>        
+        <link rel="stylesheet" href="/css/layout.css">
+        <%- style%>
     </head>
 
     <body>
+        <%-include('_header')%>
         <h1> hello: this is layout of view. </h1>
-        <!-- <%-include('_header')%> -->
+
+        
+        <%- body%>
+
         <h1>This is body of the layout view page.</h1>
-        <!-- <%include('_footer')%> -->
-   
+
+      
+        <%- include('_footer')%>
+        
+        <%-script%>
+       
     </body>
 </html>
