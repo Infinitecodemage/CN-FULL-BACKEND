@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>
+            <%= title %>
+        </title>        
+        <link rel="stylesheet" href="/css/layout.css">
+        <link rel="stylesheet" href="/css/header.css">
+        <link rel="stylesheet" href="/css/footer.css">
+        <%- style%>
+    </head>
+
+    <body>
+        <%-include('_header')%>
+        
+        <main class="layout main">
+            <h1> hello: this is layout of view. </h1>
+            <%- body%>
+            <h1>This is body of the layout view page.</h1>
+        </main>
+
+        <%- include('_footer')%>
+        
+        <%-script%>
+       
+    </body>
+</html>
